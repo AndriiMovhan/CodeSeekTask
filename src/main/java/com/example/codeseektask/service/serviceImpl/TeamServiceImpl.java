@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 import static java.lang.String.format;
@@ -70,11 +71,11 @@ public class TeamServiceImpl implements TeamService {
     @Transactional
     public String transferPlayer(Integer sellerTeamId, Integer playerId, Integer buyerTeamId) {
         Team sellerTeam = teamRepository.findById(sellerTeamId)
-                .orElseThrow(() -> new IllegalArgumentException(format("Team with id %d does not exist", sellerTeamId)));
+                .orElseThrow(() -> new EntityNotFoundException(format("Team with id %d does not exist", sellerTeamId)));
         Team buyerTeam = teamRepository.findById(buyerTeamId)
-                .orElseThrow(() -> new IllegalArgumentException(format("Team with id %d does not exist", buyerTeamId)));
+                .orElseThrow(() -> new EntityNotFoundException(format("Team with id %d does not exist", buyerTeamId)));
         Player player = playerRepository.findById(playerId)
-                .orElseThrow(() -> new IllegalArgumentException(format("Player with id %d does not exist", playerId)));
+                .orElseThrow(() -> new EntityNotFoundException(format("Player with id %d does not exist", playerId)));
 
         Integer totalPrice = calculateTotalPrice(player, buyerTeam);
 
